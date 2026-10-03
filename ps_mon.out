@@ -1,0 +1,2 @@
+root@mephi:~# ps -eo pid,ruid,euid,cmd --no-headers | awk '$2 >= 1000 && $3 == 0'
+   6146  1234     0 passwd

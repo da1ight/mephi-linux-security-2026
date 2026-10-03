@@ -1,0 +1,31 @@
+    1  groupadd students
+    2  useradd -u 1234 -g students -m -s /bin/bash user1
+    3  echo 'user1:P@ssw0rd123' | chpasswd
+    4  chage -M 90 user1
+    5  chage -l user1
+    6  id user1
+    7  groups user1
+    8  find / -perm -4000 -type f 2>/dev/null | tee /root/setuid_files.out
+    9  ps -eo pid,ruid,euid,user,args --no-headers | awk '$2 >= 1000 && $3 == 0'
+   10  cp /usr/bin/cat /home/user1/magic_cat
+   11  chown root:root /home/user1/magic_cat
+   12  chmod 4755 /home/user1/magic_cat
+   13  ls -l /home/user1/magic_cat
+   14  su - user1 -c '/home/user1/magic_cat /etc/shadow | head'
+   15  cp /usr/bin/chown /home/user1/magic_chown
+   16  chown root:root /home/user1/magic_chown
+   17  chmod 755 /home/user1/magic_chown
+   18  setcap cap_chown+ep /home/user1/magic_chown
+   19  getcap /home/user1/magic_chown
+   20  getfattr -d -m - /home/user1/magic_chown
+   21  su - user1 -c 'touch /home/user1/owner_test && /home/user1/magic_chown root:root /home/user1/owner_test && ls -l /home/user1/owner_test'
+   22  echo 'user1 ALL=(root) /usr/bin/date, /usr/bin/timedatectl' > /etc/sudoers.d/user1
+   23  chmod 0440 /etc/sudoers.d/user1
+   24  visudo -c
+   25  su - user1 -c 'sudo timedatectl set-ntp false && sudo timedatectl set-time "2026-10-03 12:00:00"'
+   26  su - user1 -c 'sudo date -s "2026-10-03 12:00:00"'
+   27  stat /home/user1 > /root/stat.out
+   28  stat /home/user1/magic_cat >> /root/stat.out
+   29  stat /home/user1/magic_chown >> /root/stat.out
+   30  getcap /home/user1/magic_chown > /root/getcap.out
+   31  history > /root/history.out
